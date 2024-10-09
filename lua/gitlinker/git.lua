@@ -14,7 +14,8 @@ local function git(args, cwd)
   p:after_success(function(j)
     output = j:result()
   end)
-  p:sync()
+  local timeout = 10000
+  p:sync(timeout)
   return output or {}
 end
 
@@ -248,9 +249,8 @@ function M.get_branch_remote()
     return nil
   end
 
-  local remote_from_upstream_branch = upstream_branch:match(
-    "^(" .. allowed_chars .. ")%/"
-  )
+  local remote_from_upstream_branch =
+    upstream_branch:match("^(" .. allowed_chars .. ")%/")
   if not remote_from_upstream_branch then
     error(
       string.format(
